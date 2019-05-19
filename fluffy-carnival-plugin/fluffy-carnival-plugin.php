@@ -16,10 +16,8 @@ class FluffyCarnivalClass {
 	 * Hook into the appropriate actions when the class is constructed.
 	 */
 	public function __construct() {
-
 		add_action('add_meta_boxes', array($this, 'fc_add_meta_box'));
 		add_action('save_post', array($this, 'save'));
-		add_action('the_content', array($this, 'fc_message'));
 	}
 
 	// setup
@@ -63,16 +61,6 @@ class FluffyCarnivalClass {
 
 		// Update the messae
 		update_post_meta($post_id, '_fc_message', $data);
-	}
-    // return the message
-	public function fc_message($content) {
-		global $post;
-		$data = get_post_meta($post -> ID, '_fc_message', true);
-		if (!empty($data)) {
-			$rd_meta_message .= $data;
-			$content = $rd_meta_message . $content;
-		}
-		return $content;
 	}
 
 }

@@ -10,6 +10,11 @@
     <body>
         <?php if (have_posts()) : while (have_posts()) : the_post(); ?>	
             <?php the_content(); ?>
+            <?php
+                //Create custom meta as a variable 
+                $fcMessage =  get_post_meta($post -> ID, '_fc_message', true);
+                echo $fcMessage;
+                ?>
         <?php endwhile; endif; ?>
     </body>
 <?php wp_footer();?>
