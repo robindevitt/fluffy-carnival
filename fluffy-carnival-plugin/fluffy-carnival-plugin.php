@@ -2,7 +2,7 @@
 /**
     * Plugin Name: Fluffy Carnival Plugin
     * Description: Test Excercise #1 : Fluffy Carnival!
-    * Version: 1.0.0
+    * Version: 1.2.0
     * Author: Robin Devitt
     * Author URI: https://robindevitt.co.za
     * Text Domain: robindevitt
@@ -65,3 +65,42 @@ class FluffyCarnivalClass {
 
 }
 new FluffyCarnivalClass;
+
+//Add endpoint
+    add_action( 'init', 'fc_endpoint_add_endpoint' );
+//Check and diplay content else bail
+    add_action( 'template_redirect', 'fc_endpoint_template_redirect' );
+//activation
+    register_activation_hook( __FILE__, 'fc_endpoint_activate' );
+//deactivation
+    register_deactivation_hook( __FILE__, 'fc_endpoint_deactivate' );
+
+function fc_endpoint_add_endpoint() {
+    // add the arbitrary endpoint
+    add_rewrite_endpoint( 'arbitrary', EP_PERMALINK | EP_PAGES );
+}
+
+function fc_endpoint_template_redirect() {
+    global $wp_query;
+    // check else bail
+    if ( ! isset( $wp_query->query_vars['arbitrary'] ) || ! is_singular() )
+        return;
+    // output the json data
+    fc_endpoint_data();
+    exit;
+}
+
+function fc_endpoint_data() {
+    //template to display json data from within the plguin
+    include dirname( __FILE__ ) . '/endpoint-data.php';
+}
+function fc_endpoint_activate() {
+    fc_endpoint_add_endpoint();
+    // flush rewrite rules
+    flush_rewrite_rules();
+}
+
+function fc_endpoint_deactivate() {
+    // flush deactivation
+    flush_rewrite_rules();
+}
